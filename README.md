@@ -51,8 +51,11 @@ conda install --file requirements.txt
 python scrapper.py
 ```
 **Step1** Go to [google.com](www.google.com) & search the image you want to scrap. 
+
 **Step 2** Click on Image section of the search and copy the URL from the address bar
+
 **Step 3** Select the directory you want to save the Images from the window & Hit download
+
 **Caution** Donot click the running window otherwise it may go not-responding.
 
 ## Acknowledgments
