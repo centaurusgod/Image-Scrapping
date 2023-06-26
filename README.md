@@ -50,12 +50,20 @@ conda install --file requirements.txt
 ```shell
 python scrapper.py
 ```
-**Step1** Go to [Google](https://www.google.com/) & search the image you want to scrap. 
+**Step 1:** Go to [Google](https://www.google.com/) & search the image you want to scrap. 
 
-**Step 2** Click on Image section of the search and copy the URL from the address bar
+**Step 2:** Click on Image section of the search and copy the URL from the address bar
 
-**Step 3** Input the number of images you want to scrap & Select the directory you want to save the Images from the window & Hit download
+**Step 3:** Paste the copied URL in the URL textbox of application
 
+**Step 4:** Input the number of images you want to scrap & Select the directory you want to save the Images
+
+**Step 5:(Very Important)** Click on "Select WebDriver". It will open a fial dialog box. Go to the folder you have downloaded and extracted the webdriver from the website mentioned above in "Prerequisite" section. Click and select the webdriver application and 
+click open.
+
+**Step 6:** Click "Start Download"
+
+It will take a while to download images. You can go to the folder that you selected and see the images being updated there. Let it run in background and finish its job. 
 
 
 ## Acknowledgments

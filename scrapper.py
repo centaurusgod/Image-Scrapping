@@ -10,6 +10,8 @@ import threading
 
 progress_bar = None  # Variable to hold the progress bar widget
 download_path = None  # Variable to hold the download directory path
+webdriver_path = None  # Variable to hold the path to the WebDriver executable
+wd = None  # Variable to hold the WebDriver instance
 
 def get_images_from_google(wd, delay, max_images, progress_bar, num_images_label):
     def scroll_down():
@@ -78,6 +80,15 @@ def open_file_dialog():
     download_path = directory + '/'
 
 
+def select_webdriver():
+    global webdriver_path
+    global wd
+    webdriver_path = filedialog.askopenfilename()  # Show file dialog to select WebDriver executable
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')  # Run WebDriver in headless mode
+    wd = webdriver.Chrome(executable_path=webdriver_path, options=options)
+
+
 def update_progress_bar(progress_bar, current_value, max_value):
     progress = (current_value / max_value) * 100
     progress_bar['value'] = progress
@@ -89,21 +100,31 @@ def update_num_images_label(label, current_value, max_value):
 
 
 def start_download():
-    global progress_bar
     global download_path
+    global wd
+    global progress_bar
+
+    # Check if download directory is selected
+    if not download_path:
+        window.after(0, lambda: messagebox.showerror("Error", "Please select the download directory."))
+        return
+
+    # Check if WebDriver is selected
+    if not webdriver_path:
+        window.after(0, lambda: messagebox.showerror("Error", "Please select the WebDriver executable."))
+        return
 
     # Get user inputs
     num_images = int(num_images_entry.get())
 
-    # Check if directory is selected
-    if not download_path:
-        window.after(0, lambda: messagebox.showerror("Error", "Please select a download directory."))
-        return
-
-    # Create a progress bar if it doesn't exist
+    # Create progress bar if not already created
     if progress_bar is None:
         progress_bar = ttk.Progressbar(window, orient='horizontal', length=200, mode='determinate')
         progress_bar.pack()
+
+    # Create label for number of images
+    num_images_label = Label(window, text="Downloaded: 0/0")
+    num_images_label.pack()
 
     # Update the number of images label
     num_images_label.config(text=f"Downloaded: 0/{num_images}")
@@ -111,14 +132,6 @@ def start_download():
     # Start download in a separate thread
     threading.Thread(target=get_images_from_google, args=(wd, 0.1, num_images, progress_bar, num_images_label)).start()
 
-
-# Specify the path to the WebDriver executable
-webdriver_path = r'C:\Users\ozone\Desktop\ImageScraping\Image-Scrapping\chromedriver_win32\chromedriver.exe'
-
-# Set up WebDriver
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # Run WebDriver in headless mode
-wd = webdriver.Chrome(executable_path=webdriver_path, options=options)
 
 # Create the GUI window
 window = Tk()
@@ -137,9 +150,13 @@ num_images_label.pack()
 num_images_entry = Entry(window)
 num_images_entry.pack()
 
-# Button to open file dialog
+# Button to open file dialog for selecting download directory
 file_dialog_button = Button(window, text="Select Directory", command=open_file_dialog)
 file_dialog_button.pack()
+
+# Button to open file dialog for selecting WebDriver
+webdriver_button = Button(window, text="Select WebDriver", command=select_webdriver)
+webdriver_button.pack()
 
 # Button to start download
 download_button = Button(window, text="Start Download", command=start_download)
@@ -147,6 +164,3 @@ download_button.pack()
 
 # Start the GUI event loop
 window.mainloop()
-
-# Quit WebDriver
-wd.quit()
