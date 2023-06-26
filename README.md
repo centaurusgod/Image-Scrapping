@@ -61,4 +61,7 @@ python scrapper.py
 ## Acknowledgments
 **Thank you @dearcutie Nirajan Poudel for the initiation of this script.**
 
+## Contact
+**Email:** ozonewagle998@gmail.com
+
 
