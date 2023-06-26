@@ -15,8 +15,7 @@ A Python-based project for scraping images and organizing them for a classificat
 **Step 2:** Install the necessary requirements
 ```shell
 git clone https://github.com/centaurusgod/Image-Scrapping.git
-```shell
-pip install -r requirements.txt
+\`pip install -r requirements.txt
 
 
 
