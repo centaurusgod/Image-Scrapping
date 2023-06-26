@@ -1,6 +1,4 @@
 selenium
 requests
-tkinter
+tk
 Pillow
-
-# download latest webdriver (chromedriver for google chrome)
