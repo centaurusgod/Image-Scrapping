@@ -54,13 +54,16 @@ python scrapper.py
 ![Google](https://i.ibb.co/J7TgcD4/image.png)
 
 **Step 2:** Click on Image section of the search and copy the URL from the address bar
+![Google](https://i.ibb.co/ynz7NyM/image.png)
 
 **Step 3:** Paste the copied URL in the URL textbox of application
+![Application](https://i.ibb.co/m6d1KYW/image.png)
 
 **Step 4:** Input the number of images you want to scrap & Select the directory you want to save the Images
 
 **Step 5:(Very Important)** Click on "Select WebDriver". It will open a fial dialog box. Go to the folder you have downloaded and extracted the webdriver from the website mentioned above in "Prerequisite" section. Click and select the webdriver application and 
 click open.
+![Application](https://i.ibb.co/qxHfSq7/image.png)
 
 **Step 6:** Click "Start Download"
 
