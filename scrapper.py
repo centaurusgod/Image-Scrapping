@@ -4,13 +4,14 @@ import requests
 from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from tkinter import Tk, Entry, Button, filedialog, Label
 
 def get_images_from_google(wd, delay, max_images):
     def scroll_down():
         wd.execute_script("window.scrollTo(0,document.body.scrollHeight);")
         time.sleep(delay)
 
-    url = 'https://www.google.com/search?rlz=1C5CHFA_enNP1032NP1032&sxsrf=APwXEdf2hMbCziKF_g_YQHuClE_SMpOxOA:1687690308726&q=patan+durbar+square&tbm=isch&sa=X&ved=2ahUKEwiCqd6qoN7_AhUDV2wGHaFrBRwQ0pQJegQICxAB&biw=1440&bih=821&dpr=2'
+    url = url_entry.get()  # Get the URL from the input box
 
     wd.get(url)
 
@@ -33,7 +34,7 @@ def get_images_from_google(wd, delay, max_images):
                     print(f'Found: {url}')
 
                     try:
-                        download_image('./Patan-Durbar-Square/', url, f'image{len(image_urls)+1}.jpg', timeout=10)
+                        download_image(download_path, url, f'image{len(image_urls)+1}.jpg', timeout=10)
                         image_urls.append(url)
                     except TimeoutError:
                         print(f'Skipped: {url} (Timeout)')
@@ -62,16 +63,42 @@ def download_image(download_path, url, filename, timeout):
         print(f'Failed - {e}')
 
 
+def open_file_dialog():
+    directory = filedialog.askdirectory()  # Show file dialog to select download directory
+    global download_path
+    download_path = directory + '/'
+
+
 # Specify the path to the WebDriver executable
-webdriver_path = '/Users/nirajanpaudel17/Documents/Python/Major-Project/chromedriver'  # Replace with the actual path
+webdriver_path = r'C:\Users\ozone\Desktop\ImageScraping\Image-Scrapping\chromedriver_win32\chromedriver.exe'
 
 # Set up WebDriver
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')  # Run WebDriver in headless mode
 wd = webdriver.Chrome(executable_path=webdriver_path, options=options)
 
-# Scrape images and download
-urls = get_images_from_google(wd, 0.1, 150)
+#webdriver_path = r'C:\Users\ozone\Desktop\ImageScraping\Image-Scrapping\chromedriver_win32'
+
+# Create the GUI window
+window = Tk()
+window.title("Image Downloader")
+
+# URL input box
+url_label = Label(window, text="URL:")
+url_label.pack()
+url_entry = Entry(window, width=50)
+url_entry.pack()
+
+# Button to open file dialog
+file_dialog_button = Button(window, text="Select Directory", command=open_file_dialog)
+file_dialog_button.pack()
+
+# Button to start download
+download_button = Button(window, text="Start Download", command=lambda: get_images_from_google(wd, 0.1, 150))
+download_button.pack()
+
+# Start the GUI event loop
+window.mainloop()
 
 # Quit WebDriver
 wd.quit()
