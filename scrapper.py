@@ -4,9 +4,14 @@ import requests
 from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from tkinter import Tk, Entry, Button, filedialog, Label
+from tkinter import Tk, Entry, Button, filedialog, Label, ttk
+from tkinter import messagebox
+import threading
 
-def get_images_from_google(wd, delay, max_images):
+progress_bar = None  # Variable to hold the progress bar widget
+download_path = None  # Variable to hold the download directory path
+
+def get_images_from_google(wd, delay, max_images, progress_bar, num_images_label):
     def scroll_down():
         wd.execute_script("window.scrollTo(0,document.body.scrollHeight);")
         time.sleep(delay)
@@ -36,10 +41,14 @@ def get_images_from_google(wd, delay, max_images):
                     try:
                         download_image(download_path, url, f'image{len(image_urls)+1}.jpg', timeout=10)
                         image_urls.append(url)
+                        update_progress_bar(progress_bar, len(image_urls), max_images)
+                        update_num_images_label(num_images_label, len(image_urls), max_images)
                     except TimeoutError:
                         print(f'Skipped: {url} (Timeout)')
 
         scroll_down()
+
+    progress_bar.destroy()  # Destroy the progress bar after the download is complete
 
     return image_urls
 
@@ -64,9 +73,43 @@ def download_image(download_path, url, filename, timeout):
 
 
 def open_file_dialog():
-    directory = filedialog.askdirectory()  # Show file dialog to select download directory
     global download_path
+    directory = filedialog.askdirectory()  # Show file dialog to select download directory
     download_path = directory + '/'
+
+
+def update_progress_bar(progress_bar, current_value, max_value):
+    progress = (current_value / max_value) * 100
+    progress_bar['value'] = progress
+    window.update_idletasks()
+
+
+def update_num_images_label(label, current_value, max_value):
+    label.config(text=f"Downloaded: {current_value}/{max_value}")
+
+
+def start_download():
+    global progress_bar
+    global download_path
+
+    # Get user inputs
+    num_images = int(num_images_entry.get())
+
+    # Check if directory is selected
+    if not download_path:
+        window.after(0, lambda: messagebox.showerror("Error", "Please select a download directory."))
+        return
+
+    # Create a progress bar if it doesn't exist
+    if progress_bar is None:
+        progress_bar = ttk.Progressbar(window, orient='horizontal', length=200, mode='determinate')
+        progress_bar.pack()
+
+    # Update the number of images label
+    num_images_label.config(text=f"Downloaded: 0/{num_images}")
+
+    # Start download in a separate thread
+    threading.Thread(target=get_images_from_google, args=(wd, 0.1, num_images, progress_bar, num_images_label)).start()
 
 
 # Specify the path to the WebDriver executable
@@ -77,24 +120,29 @@ options = webdriver.ChromeOptions()
 options.add_argument('--headless')  # Run WebDriver in headless mode
 wd = webdriver.Chrome(executable_path=webdriver_path, options=options)
 
-#webdriver_path = r'C:\Users\ozone\Desktop\ImageScraping\Image-Scrapping\chromedriver_win32'
-
 # Create the GUI window
 window = Tk()
 window.title("Image Downloader")
+window.geometry('500x500')  # Set the window size
 
 # URL input box
 url_label = Label(window, text="URL:")
 url_label.pack()
-url_entry = Entry(window, width=50)
+url_entry = Entry(window, width=100)
 url_entry.pack()
+
+# Number of images input box
+num_images_label = Label(window, text="Number of Images:")
+num_images_label.pack()
+num_images_entry = Entry(window)
+num_images_entry.pack()
 
 # Button to open file dialog
 file_dialog_button = Button(window, text="Select Directory", command=open_file_dialog)
 file_dialog_button.pack()
 
 # Button to start download
-download_button = Button(window, text="Start Download", command=lambda: get_images_from_google(wd, 0.1, 150))
+download_button = Button(window, text="Start Download", command=start_download)
 download_button.pack()
 
 # Start the GUI event loop
