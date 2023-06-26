@@ -46,7 +46,7 @@ conda activate your_environment_name
 conda install --file requirements.txt
 ```
 ## Usage
-**How to run?** Simply run the following command.
+**How to run?** Simply run the following command either in you python or Conda environment.
 ```shell
 python scrapper.py
 ```
@@ -54,9 +54,9 @@ python scrapper.py
 
 **Step 2** Click on Image section of the search and copy the URL from the address bar
 
-**Step 3** Select the directory you want to save the Images from the window & Hit download
+**Step 3** Input the number of images you want to scrap & Select the directory you want to save the Images from the window & Hit download
 
-**Caution** Donot click the running window otherwise it may go not-responding.
+
 
 ## Acknowledgments
 **Thank you @dearcutie Nirajan Poudel for the initiation of this script.**
