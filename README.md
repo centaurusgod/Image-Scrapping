@@ -1,3 +1,6 @@
+#Easy way
+ - Use this addon from chrome web store: https://chromewebstore.google.com/detail/download-all-images/ifipmflagepipjokmbdecpmjbibjnakm
+
 # Image-Scrapping for Classification Project
 A Python-based project for scraping images and organizing them for a classification project.
 
